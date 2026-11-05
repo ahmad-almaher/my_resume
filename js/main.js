@@ -24,28 +24,23 @@ $('#nav').affix({
       }
 });	
 
-	// skills chart
-	$(document).ready(function(e) {
-	//var windowBottom = $(window).height();
-	var index=0;
-	$(document).scroll(function(){
-		var top = $('#skills').height()-$(window).scrollTop();
-		console.log(top)
-		if(top<-300){
-			if(index==0){	
-			
-				$('.chart').easyPieChart({
-					easing: 'easeOutBounce',
-					onStep: function(from, to, percent) {
-						$(this.el).find('.percent').text(Math.round(percent));
-					}
-				});
-			
+	// skills chart: animate each chart once it scrolls into view
+	$(document).ready(function() {
+		function initVisibleCharts() {
+			var windowBottom = $(window).scrollTop() + $(window).height();
+			$('.chart').not('.chart-init').each(function() {
+				if ($(this).offset().top < windowBottom - 50) {
+					$(this).addClass('chart-init').easyPieChart({
+						easing: 'easeOutBounce',
+						onStep: function(from, to, percent) {
+							$(this.el).find('.percent').text(Math.round(percent));
+						}
+					});
 				}
-			index++;
+			});
 		}
-	})
-	//console.log(nagativeValue)
+		$(window).on('scroll resize', initVisibleCharts);
+		initVisibleCharts();
 	});
 
 
